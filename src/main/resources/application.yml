@@ -1,0 +1,15 @@
+spring:
+  ai:
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY}   # set this env var before running
+      chat:
+        options:
+          model: claude-haiku-4-5-20251001
+          max-tokens: 4096
+  main:
+    web-application-type: none
+
+eval:
+  dataset-size: 3          # how many Java functions to generate
+  pass-threshold: 4.0       # score >= this = PASS
+  output-file: eval-report.json
