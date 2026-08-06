@@ -1,10 +1,10 @@
 spring:
   ai:
-    anthropic:
-      api-key: ${ANTHROPIC_API_KEY}   # set this env var before running
+    openai:
+      api-key: ${OPEN_AI_API_KEY}  # set this env var before running
       chat:
         options:
-          model: claude-haiku-4-5-20251001
+          model: gpt-4.1-mini
           max-tokens: 4096
   main:
     web-application-type: none

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.anthropic.AnthropicChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -23,7 +23,7 @@ import java.util.List;
 public class GraderService {
 
     private static final Logger log = LoggerFactory.getLogger(GraderService.class);
-    private final AnthropicChatModel chatModel;
+    private final OpenAiChatModel chatModel;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Value("${eval.pass-threshold:4.0}")
@@ -71,7 +71,7 @@ public class GraderService {
         }
         """;
 
-    public GraderService(AnthropicChatModel chatModel) {
+    public GraderService(OpenAiChatModel chatModel) {
         this.chatModel = chatModel;
     }
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.anthropic.AnthropicChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -18,7 +18,7 @@ import java.util.List;
 public class DatasetGenerator {
 
     private static final Logger log = LoggerFactory.getLogger(DatasetGenerator.class);
-    private final AnthropicChatModel chatModel;
+    private final OpenAiChatModel chatModel;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Value("${eval.dataset-size:10}")
@@ -37,7 +37,7 @@ public class DatasetGenerator {
         Always respond with ONLY a valid JSON array. No markdown, no preamble.
         """;
 
-    public DatasetGenerator(AnthropicChatModel chatModel) {
+    public DatasetGenerator(OpenAiChatModel chatModel) {
         this.chatModel = chatModel;
     }
 

@@ -4,7 +4,7 @@ import com.eval.model.ExplanationResult;
 import com.eval.model.JavaFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.anthropic.AnthropicChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -22,7 +22,7 @@ import java.util.List;
 public class ExplainerService {
 
     private static final Logger log = LoggerFactory.getLogger(ExplainerService.class);
-    private final AnthropicChatModel chatModel;
+    private final OpenAiChatModel chatModel;
 
     // ── Prompt V1 — baseline ──────────────────────────────────────────────
     private static final String EXPLAINER_SYSTEM = """
@@ -57,7 +57,7 @@ public class ExplainerService {
     //     Reply with only your explanation.
     //     """;
 
-    public ExplainerService(AnthropicChatModel chatModel) {
+    public ExplainerService(OpenAiChatModel chatModel) {
         this.chatModel = chatModel;
     }
 
