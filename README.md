@@ -1,6 +1,6 @@
 # Java Explainer — Prompt Evaluation Suite
 
-A Spring AI application that evaluates how well Claude explains Java functions
+A Spring AI application that evaluates how well OpenAI GPT explains Java functions
 in plain English. Scores each explanation on four dimensions and produces a
 formatted Excel report.
 
@@ -8,9 +8,9 @@ formatted Excel report.
 
 ## What it does
 
-1. **Generates** a dataset of Java functions (simple, medium, complex) using Claude
-2. **Runs** an explainer prompt on each function — asking Claude to explain it in plain English
-3. **Grades** each explanation using Claude as a judge (LLM-as-judge pattern)
+1. **Generates** a dataset of Java functions (simple, medium, complex) using OpenAI GPT
+2. **Runs** an explainer prompt on each function — asking GPT to explain it in plain English
+3. **Grades** each explanation using GPT as a judge (LLM-as-judge pattern)
 4. **Reports** results to console and saves a formatted Excel file
 
 ---
@@ -21,7 +21,7 @@ formatted Excel report.
 |---|---|
 | Java | 17+ |
 | Maven | 3.8+ |
-| Anthropic API key | Any active key |
+| OpenAI API key | Any active key |
 
 ---
 
@@ -31,20 +31,20 @@ formatted Excel report.
 
 Mac / Linux:
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-...
+export OPEN_AI_API_KEY=sk-...
 ```
 
 Windows CMD:
 ```cmd
-set ANTHROPIC_API_KEY=sk-ant-...
+set OPEN_AI_API_KEY=sk-...
 ```
 
 Windows PowerShell:
 ```powershell
-$env:ANTHROPIC_API_KEY="sk-ant-..."
+$env:OPEN_AI_API_KEY="sk-..."
 ```
 
-> The key is read from the environment via `${ANTHROPIC_API_KEY}` in
+> The key is read from the environment via `${OPEN_AI_API_KEY}` in
 > `application.yml`. It is never stored in any file.
 
 **Step 2 — Run**
@@ -64,15 +64,15 @@ spring:
   main:
     web-application-type: none    # CLI app, no web server needed
   ai:
-    anthropic:
-      api-key: ${ANTHROPIC_API_KEY}
+    openai:
+      api-key: ${OPEN_AI_API_KEY}
       chat:
         options:
-          model: claude-haiku-4-5-20251001
+          model: gpt-4.1-mini
           max-tokens: 4096          # keep high — complex functions need room
 
 eval:
-  dataset-size: 5          # number of Java functions to generate
+  dataset-size: 3          # number of Java functions to generate
   pass-threshold: 4.0      # score >= this = PASS (scale of 1-5)
   output-file: eval-report.json
 ```
@@ -155,7 +155,7 @@ src/main/java/com/eval/
 │   └── EvalReport.java               Aggregated report with averages and weakest dimension
 │
 ├── service/
-│   ├── DatasetGenerator.java         Calls Claude to generate Java functions + ideal answers
+│   ├── DatasetGenerator.java         Calls OpenAI GPT to generate Java functions + ideal answers
 │   ├── ExplainerService.java         THE PROMPT UNDER TEST — edit this to iterate
 │   ├── GraderService.java            LLM-as-judge — scores each explanation
 │   ├── ReportService.java            Aggregates results, prints console summary
@@ -201,7 +201,7 @@ mvn spring-boot:run
 Spring Boot starts — reads application.yml
         │
         ▼
-Builds AnthropicChatModel (API key + model config)
+Builds OpenAiChatModel (API key + model config)
         │
         ▼
 Injects all services → EvalRunner.run() is called
@@ -219,7 +219,7 @@ Injects all services → EvalRunner.run() is called
 
 **Total API calls per run** = 1 + (2 × dataset-size)
 
-With `dataset-size: 5` that is 11 calls — roughly **$0.001** at Haiku pricing.
+With `dataset-size: 3` that is 7 calls.
 
 ---
 
@@ -227,10 +227,10 @@ With `dataset-size: 5` that is 11 calls — roughly **$0.001** at Haiku pricing.
 
 | Error | Cause | Fix |
 |---|---|---|
-| `API key must not be null` | `ANTHROPIC_API_KEY` env var not set | Run `export ANTHROPIC_API_KEY=sk-ant-...` |
+| `API key must not be null` | `OPEN_AI_API_KEY` env var not set | Run `export OPEN_AI_API_KEY=sk-...` |
 | `Unexpected end-of-input` | Response truncated — token limit too low | Increase `max-tokens` in `application.yml` |
 | `ReactiveWebServerFactory not found` | Spring AI pulls in reactive web | Ensure `web-application-type: none` is in `application.yml` |
-| `Could not find artifact spring-ai-anthropic` | Wrong version or missing repo | Ensure `spring-ai.version=1.0.0-M6` and milestone repo is in `pom.xml` |
+| `Could not find artifact spring-ai-openai` | Wrong version or missing repo | Ensure `spring-ai.version=1.0.0-M6` and milestone repo is in `pom.xml` |
 
 ---
 
